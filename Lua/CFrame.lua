@@ -196,7 +196,7 @@ end
 function mt.__index(cf, index)
 	if (index == "x" or index == "y" or index == "z") then
 		return rawget(cf, "proxy").p[index]
-	elseif (index == "p" or index == "position" or index == "lookVector") then
+	elseif (index == "p" or index == "position" or index == "lookVector" or index == "rightVector" or index == "upVector") then
 		return rawget(cf, "proxy")[index]
 	elseif cframe[index] then
 		return cframe[index]
@@ -314,10 +314,14 @@ function cframe.new(...)
 		local eye, look = t[1], t[2]
 		local eyeIsVector = type(eye) == "table" and eye.__type and eye.__type == "vector3"
 		local lookIsVector = type(look) == "table" and look.__type and look.__type == "vector3"
-		if (not eyeIsVector and not lookIsVector) then
+		if (not eyeIsVector) then
 			local t = type(eye)
 			local cust = t == "table" and eye.__type or t
 			error("bad argument #1 to 'new' (Vector3 expected, got" .. cust .. ")")
+		elseif (not lookIsVector) then
+			local t = type(look)
+			local cust = t == "table" and look.__type or t
+			error("bad argument #2 to 'new' (Vector3 expected, got" .. cust .. ")")
 		end
 
 		local zaxis = (eye - look).unit
@@ -383,8 +387,34 @@ function cframe.new(...)
 	end
 
 	self.proxy.lookVector = Vector3.new(-self.proxy.m13, -self.proxy.m23, -self.proxy.m33)
+	self.proxy.rightVector = Vector3.new(self.proxy.m11, self.proxy.m21, self.proxy.m31)
+	self.proxy.upVector = Vector3.new(self.proxy.m12, self.proxy.m22, self.proxy.m32)
 
 	return setmetatable(self, mt)
+end
+
+function cframe.lookAt(eye, look)
+	local eyeIsVector = type(eye) == "table" and eye.__type and eye.__type == "vector3"
+	local lookIsVector = type(look) == "table" and look.__type and look.__type == "vector3"
+	local t = type(eye)
+	local cust = t == "table" and eye.__type or t
+	assert(eyeIsVector, "bad argument #1 to 'lookAt' (Vector3 expected, got " .. cust .. ")")
+	t = type(look)
+	cust = t == "table" and look.__type or t
+	assert(lookIsVector, "bad argument #2 to 'lookAt' (Vector3 expected, got " .. cust .. ")")
+	return cframe.new(eye, look)
+end
+
+function cframe.lookAlong(eye, look)
+	local eyeIsVector = type(eye) == "table" and eye.__type and eye.__type == "vector3"
+	local lookIsVector = type(look) == "table" and look.__type and look.__type == "vector3"
+	local t = type(eye)
+	local cust = t == "table" and eye.__type or t
+	assert(eyeIsVector, "bad argument #1 to 'lookAlong' (Vector3 expected, got " .. cust .. ")")
+	t = type(look)
+	cust = t == "table" and look.__type or t
+	assert(lookIsVector, "bad argument #2 to 'lookAlong' (Vector3 expected, got " .. cust .. ")")
+	return cframe.new(eye, eye + look)
 end
 
 function cframe.fromAxisAngle(axis, theta)

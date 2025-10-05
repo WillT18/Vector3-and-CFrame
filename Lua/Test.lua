@@ -30,3 +30,10 @@ print(x:FuzzyEq(y))
 
 local z = y * CFrame.angles(0, math.rad(31), 0)
 print(z:AngleBetween(y))
+
+x = CFrame.lookAlong(Vector3.new(), Vector3.new(1, 0, 1))
+--x = CFrame.new()
+print(x)
+print(x.lookVector) -- sqrt(2)/2, 0 sqrt(2)/2
+print(x.rightVector) -- -sqrt(2)/2, 0, sqrt(2)/2
+print(x.upVector) -- 0, 1, 1
