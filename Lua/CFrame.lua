@@ -11,6 +11,8 @@ local prettyPrint = false -- mainly for debug (not a feature in real CFrames)
 
 -- built-in functions
 
+local lua_version = tonumber(string.match(_VERSION, ".*(%d%.%d)"))
+
 local pi = math.pi
 local max = math.max
 local cos = math.cos
@@ -18,8 +20,8 @@ local sin = math.sin
 local acos = math.acos
 local asin = math.asin
 local sqrt = math.sqrt
-local atan2 = math.atan
-local unpack = table.unpack
+local atan2 = (lua_version >= 5.3) and math.atan or math.atan2
+local unpack = (lua_version >= 5.2) and table.unpack or unpack
 local concat = table.concat
 
 -- some variables
