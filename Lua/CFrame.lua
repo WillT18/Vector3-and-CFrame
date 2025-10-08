@@ -198,8 +198,10 @@ end
 function mt.__index(cf, index)
 	if (index == "x" or index == "y" or index == "z") then
 		return rawget(cf, "proxy").p[index]
-	elseif (index == "p" or index == "position" or index == "lookVector" or index == "rightVector" or index == "upVector") then
+	elseif (index == "p" or index == "lookVector" or index == "rightVector" or index == "upVector") then
 		return rawget(cf, "proxy")[index]
+	elseif (index == "position") then
+		return rawget(cf, "proxy").p
 	elseif cframe[index] then
 		return cframe[index]
 	else
